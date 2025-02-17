@@ -69,12 +69,12 @@ export class Invoice extends React.Component {
                 fontSize: "24px",
               }}
             >
-              <h1 style={{ fontWeight: "bold" }}>{company?.name || ""}</h1>
-              <div style={{ fontWeight: "bold" }}>
+              <h1 style={{ fontWeight:800 }}>{company?.name || ""}</h1>
+              <div style={{ fontWeight:800 }}>
                 <FontAwesomeIcon icon={faPhone} /> {company.phone_one},{" "}
                 {company.phone_two}
               </div>
-              <div style={{ fontWeight: "bold" }}>
+              <div style={{ fontWeight:800 }}>
                 <FontAwesomeIcon icon={faGlobe} /> {company.website}
               </div>
             </header>
@@ -87,14 +87,14 @@ export class Invoice extends React.Component {
                 marginBottom: "10px",
               }}
             >
-              <div style={{ textAlign: "left", fontWeight: "bold" }}>
+              <div style={{ textAlign: "left", fontWeight:800 }}>
                 Date: {moment(invoice.created_at).format("MMM DD YYYY, h:mm A")}
                 <br />
                 Invoice #: {invoice.invoice_no}
                 <br />
                 {company.address}
               </div>
-              <div style={{ textAlign: "right", fontWeight: "bold" }}>
+              <div style={{ textAlign: "right", fontWeight:800 }}>
                 <strong>Customer</strong>
                 <br />
                 {invoice.client.name}
@@ -115,14 +115,14 @@ export class Invoice extends React.Component {
             >
               <thead>
                 <tr>
-                  <th style={{ fontSize: "20px", fontWeight: "bold" }}>
+                  <th style={{ fontSize: "20px", fontWeight:800 }}>
                     Product
                   </th>
-                  <th style={{ fontSize: "20px", fontWeight: "bold" }}>Qty</th>
-                  <th style={{ fontSize: "20px", fontWeight: "bold" }}>
+                  <th style={{ fontSize: "20px", fontWeight:800 }}>Qty</th>
+                  <th style={{ fontSize: "20px", fontWeight:800 }}>
                     Price
                   </th>
-                  <th style={{ fontSize: "20px", fontWeight: "bold" }}>
+                  <th style={{ fontSize: "20px", fontWeight:800 }}>
                     Amount
                   </th>
                 </tr>
@@ -134,36 +134,36 @@ export class Invoice extends React.Component {
                       style={{
                         fontSize: "20px",
                         textTransform: "uppercase",
-                        fontWeight: "bold",
+                        fontWeight:800,
                         maxWidth: 300,
                         textWrap: "wrap",
                       }}
                     >
                       {item.description}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <td style={{ fontSize: "20px", fontWeight:800 }}>
                       {item.quantity}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <td style={{ fontSize: "20px", fontWeight:800 }}>
                       {this.formatCurrency(item.rate)}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <td style={{ fontSize: "20px", fontWeight:800 }}>
                       {this.formatCurrency(item.amount)}
                     </td>
                   </tr>
                 ))}
                 {combinedItems.map((item, index) => (
                   <tr key={index}>
-                    <td style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <td style={{ fontSize: "20px", fontWeight:800 }}>
                       {item.order.product_name}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <td style={{ fontSize: "20px", fontWeight:800 }}>
                       {item.qty_sold}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <td style={{ fontSize: "20px", fontWeight:800 }}>
                       {this.formatCurrency(item.selling_price)}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <td style={{ fontSize: "20px", fontWeight:800 }}>
                       {this.formatCurrency(item.selling_price * item.qty_sold)}
                     </td>
                   </tr>
@@ -173,7 +173,7 @@ export class Invoice extends React.Component {
 
             <div
               style={{
-                fontWeight: "bold",
+                fontWeight:800,
                 fontSize: "22px",
                 textAlign: "right",
                 marginBottom: "10px",
@@ -212,12 +212,12 @@ export class Invoice extends React.Component {
                 fontSize: "20px",
                 marginTop: "10px",
                 textAlign: "center",
-                fontWeight: "bold",
+                fontWeight:800,
               }}
             >
               <div>{company?.invoice_footer_one}</div>
               <div>{company?.invoice_footer_two}</div>
-              <div style={{ fontWeight: "bold", marginTop: "10px" }}>
+              <div style={{ fontWeight:800, marginTop: "10px" }}>
                 Cashier: {invoice.cashier_name}
               </div>
             </footer>
