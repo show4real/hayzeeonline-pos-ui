@@ -69,12 +69,32 @@ export class Invoice extends React.Component {
                 fontSize: "24px",
               }}
             >
-              <h1 style={{ fontWeight:800 }}>{company?.name || ""}</h1>
-              <div style={{ fontWeight:800 }}>
+              <h1
+                style={{
+                  fontWeight: "bolder",
+                  color: "black",
+                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                }}
+              >
+                {company?.name || ""}
+              </h1>
+              <div
+                style={{
+                  fontWeight: "bolder",
+                  color: "black",
+                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                }}
+              >
                 <FontAwesomeIcon icon={faPhone} /> {company.phone_one},{" "}
                 {company.phone_two}
               </div>
-              <div style={{ fontWeight:800 }}>
+              <div
+                style={{
+                  fontWeight: "bolder",
+                  color: "black",
+                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                }}
+              >
                 <FontAwesomeIcon icon={faGlobe} /> {company.website}
               </div>
             </header>
@@ -87,14 +107,28 @@ export class Invoice extends React.Component {
                 marginBottom: "10px",
               }}
             >
-              <div style={{ textAlign: "left", fontWeight:800 }}>
+              <div
+                style={{
+                  textAlign: "left",
+                  fontWeight: "bolder",
+                  color: "black",
+                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                }}
+              >
                 Date: {moment(invoice.created_at).format("MMM DD YYYY, h:mm A")}
                 <br />
                 Invoice #: {invoice.invoice_no}
                 <br />
                 {company.address}
               </div>
-              <div style={{ textAlign: "right", fontWeight:800 }}>
+              <div
+                style={{
+                  textAlign: "right",
+                  fontWeight: "bolder",
+                  color: "black",
+                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                }}
+              >
                 <strong>Customer</strong>
                 <br />
                 {invoice.client.name}
@@ -115,14 +149,44 @@ export class Invoice extends React.Component {
             >
               <thead>
                 <tr>
-                  <th style={{ fontSize: "20px", fontWeight:800 }}>
+                  <th
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "bolder",
+                      color: "black",
+                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                    }}
+                  >
                     Product
                   </th>
-                  <th style={{ fontSize: "20px", fontWeight:800 }}>Qty</th>
-                  <th style={{ fontSize: "20px", fontWeight:800 }}>
+                  <th
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "bolder",
+                      color: "black",
+                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                    }}
+                  >
+                    Qty
+                  </th>
+                  <th
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "bolder",
+                      color: "black",
+                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                    }}
+                  >
                     Price
                   </th>
-                  <th style={{ fontSize: "20px", fontWeight:800 }}>
+                  <th
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "bolder",
+                      color: "black",
+                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                    }}
+                  >
                     Amount
                   </th>
                 </tr>
@@ -134,36 +198,95 @@ export class Invoice extends React.Component {
                       style={{
                         fontSize: "20px",
                         textTransform: "uppercase",
-                        fontWeight:800,
+                        fontWeight: "bolder",
+                        color: "black",
+                        fontFamily:
+                          "monaco, Consolas, Lucida Console, monospace",
                         maxWidth: 300,
                         textWrap: "wrap",
                       }}
                     >
                       {item.description}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight:800 }}>
+                    <td
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bolder",
+                        color: "black",
+                        fontFamily:
+                          "monaco, Consolas, Lucida Console, monospace",
+                      }}
+                    >
                       {item.quantity}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight:800 }}>
+                    <td
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bolder",
+                        color: "black",
+                        fontFamily:
+                          "monaco, Consolas, Lucida Console, monospace",
+                      }}
+                    >
                       {this.formatCurrency(item.rate)}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight:800 }}>
+                    <td
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bolder",
+                        color: "black",
+                        fontFamily:
+                          "monaco, Consolas, Lucida Console, monospace",
+                      }}
+                    >
                       {this.formatCurrency(item.amount)}
                     </td>
                   </tr>
                 ))}
                 {combinedItems.map((item, index) => (
                   <tr key={index}>
-                    <td style={{ fontSize: "20px", fontWeight:800 }}>
+                    <td
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bolder",
+                        color: "black",
+                        fontFamily:
+                          "monaco, Consolas, Lucida Console, monospace",
+                      }}
+                    >
                       {item.order.product_name}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight:800 }}>
+                    <td
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bolder",
+                        color: "black",
+                        fontFamily:
+                          "monaco, Consolas, Lucida Console, monospace",
+                      }}
+                    >
                       {item.qty_sold}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight:800 }}>
+                    <td
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bolder",
+                        color: "black",
+                        fontFamily:
+                          "monaco, Consolas, Lucida Console, monospace",
+                      }}
+                    >
                       {this.formatCurrency(item.selling_price)}
                     </td>
-                    <td style={{ fontSize: "20px", fontWeight:800 }}>
+                    <td
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bolder",
+                        color: "black",
+                        fontFamily:
+                          "monaco, Consolas, Lucida Console, monospace",
+                      }}
+                    >
                       {this.formatCurrency(item.selling_price * item.qty_sold)}
                     </td>
                   </tr>
@@ -173,7 +296,9 @@ export class Invoice extends React.Component {
 
             <div
               style={{
-                fontWeight:800,
+                fontWeight: "bolder",
+                color: "black",
+                fontFamily: "monaco, Consolas, Lucida Console, monospace",
                 fontSize: "22px",
                 textAlign: "right",
                 marginBottom: "10px",
@@ -212,12 +337,21 @@ export class Invoice extends React.Component {
                 fontSize: "20px",
                 marginTop: "10px",
                 textAlign: "center",
-                fontWeight:800,
+                fontWeight: "bolder",
+                color: "black",
+                fontFamily: "monaco, Consolas, Lucida Console, monospace",
               }}
             >
               <div>{company?.invoice_footer_one}</div>
               <div>{company?.invoice_footer_two}</div>
-              <div style={{ fontWeight:800, marginTop: "10px" }}>
+              <div
+                style={{
+                  fontWeight: "bolder",
+                  color: "black",
+                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                  marginTop: "10px",
+                }}
+              >
                 Cashier: {invoice.cashier_name}
               </div>
             </footer>
