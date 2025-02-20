@@ -299,7 +299,7 @@ export class Invoice extends React.Component {
                 fontWeight: 900,
                 color: "black",
                 fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                fontSize: "22px",
+                fontSize: "30px",
                 textAlign: "right",
                 marginBottom: "10px",
               }}
