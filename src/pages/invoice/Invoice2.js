@@ -71,7 +71,7 @@ export class Invoice extends React.Component {
             >
               <h1
                 style={{
-                  fontWeight: "bolder",
+                  fontWeight: 900,
                   color: "black",
                   fontFamily: "monaco, Consolas, Lucida Console, monospace",
                 }}
@@ -80,7 +80,7 @@ export class Invoice extends React.Component {
               </h1>
               <div
                 style={{
-                  fontWeight: "bolder",
+                  fontWeight: 900,
                   color: "black",
                   fontFamily: "monaco, Consolas, Lucida Console, monospace",
                 }}
@@ -90,7 +90,7 @@ export class Invoice extends React.Component {
               </div>
               <div
                 style={{
-                  fontWeight: "bolder",
+                  fontWeight: 900,
                   color: "black",
                   fontFamily: "monaco, Consolas, Lucida Console, monospace",
                 }}
@@ -103,14 +103,14 @@ export class Invoice extends React.Component {
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                fontSize: "20px",
+                fontSize: "30px",
                 marginBottom: "10px",
               }}
             >
               <div
                 style={{
                   textAlign: "left",
-                  fontWeight: "bolder",
+                  fontWeight: 900,
                   color: "black",
                   fontFamily: "monaco, Consolas, Lucida Console, monospace",
                 }}
@@ -124,7 +124,7 @@ export class Invoice extends React.Component {
               <div
                 style={{
                   textAlign: "right",
-                  fontWeight: "bolder",
+                  fontWeight: 900,
                   color: "black",
                   fontFamily: "monaco, Consolas, Lucida Console, monospace",
                 }}
@@ -151,8 +151,8 @@ export class Invoice extends React.Component {
                 <tr>
                   <th
                     style={{
-                      fontSize: "20px",
-                      fontWeight: "bolder",
+                      fontSize: "30px",
+                      fontWeight: 900,
                       color: "black",
                       fontFamily: "monaco, Consolas, Lucida Console, monospace",
                     }}
@@ -161,8 +161,8 @@ export class Invoice extends React.Component {
                   </th>
                   <th
                     style={{
-                      fontSize: "20px",
-                      fontWeight: "bolder",
+                      fontSize: "30px",
+                      fontWeight: 900,
                       color: "black",
                       fontFamily: "monaco, Consolas, Lucida Console, monospace",
                     }}
@@ -171,8 +171,8 @@ export class Invoice extends React.Component {
                   </th>
                   <th
                     style={{
-                      fontSize: "20px",
-                      fontWeight: "bolder",
+                      fontSize: "30px",
+                      fontWeight: 900,
                       color: "black",
                       fontFamily: "monaco, Consolas, Lucida Console, monospace",
                     }}
@@ -181,8 +181,8 @@ export class Invoice extends React.Component {
                   </th>
                   <th
                     style={{
-                      fontSize: "20px",
-                      fontWeight: "bolder",
+                      fontSize: "30px",
+                      fontWeight: 900,
                       color: "black",
                       fontFamily: "monaco, Consolas, Lucida Console, monospace",
                     }}
@@ -196,9 +196,9 @@ export class Invoice extends React.Component {
                   <tr key={index}>
                     <td
                       style={{
-                        fontSize: "20px",
+                        fontSize: "30px",
                         textTransform: "uppercase",
-                        fontWeight: "bolder",
+                        fontWeight: 900,
                         color: "black",
                         fontFamily:
                           "monaco, Consolas, Lucida Console, monospace",
@@ -210,8 +210,8 @@ export class Invoice extends React.Component {
                     </td>
                     <td
                       style={{
-                        fontSize: "20px",
-                        fontWeight: "bolder",
+                        fontSize: "30px",
+                        fontWeight: 900,
                         color: "black",
                         fontFamily:
                           "monaco, Consolas, Lucida Console, monospace",
@@ -221,8 +221,8 @@ export class Invoice extends React.Component {
                     </td>
                     <td
                       style={{
-                        fontSize: "20px",
-                        fontWeight: "bolder",
+                        fontSize: "30px",
+                        fontWeight: 900,
                         color: "black",
                         fontFamily:
                           "monaco, Consolas, Lucida Console, monospace",
@@ -232,8 +232,8 @@ export class Invoice extends React.Component {
                     </td>
                     <td
                       style={{
-                        fontSize: "20px",
-                        fontWeight: "bolder",
+                        fontSize: "30px",
+                        fontWeight: 900,
                         color: "black",
                         fontFamily:
                           "monaco, Consolas, Lucida Console, monospace",
@@ -247,8 +247,8 @@ export class Invoice extends React.Component {
                   <tr key={index}>
                     <td
                       style={{
-                        fontSize: "20px",
-                        fontWeight: "bolder",
+                        fontSize: "30px",
+                        fontWeight: 900,
                         color: "black",
                         fontFamily:
                           "monaco, Consolas, Lucida Console, monospace",
@@ -258,8 +258,8 @@ export class Invoice extends React.Component {
                     </td>
                     <td
                       style={{
-                        fontSize: "20px",
-                        fontWeight: "bolder",
+                        fontSize: "30px",
+                        fontWeight: 900,
                         color: "black",
                         fontFamily:
                           "monaco, Consolas, Lucida Console, monospace",
@@ -269,8 +269,8 @@ export class Invoice extends React.Component {
                     </td>
                     <td
                       style={{
-                        fontSize: "20px",
-                        fontWeight: "bolder",
+                        fontSize: "30px",
+                        fontWeight: 900,
                         color: "black",
                         fontFamily:
                           "monaco, Consolas, Lucida Console, monospace",
@@ -280,8 +280,8 @@ export class Invoice extends React.Component {
                     </td>
                     <td
                       style={{
-                        fontSize: "20px",
-                        fontWeight: "bolder",
+                        fontSize: "30px",
+                        fontWeight: 900,
                         color: "black",
                         fontFamily:
                           "monaco, Consolas, Lucida Console, monospace",
@@ -296,7 +296,7 @@ export class Invoice extends React.Component {
 
             <div
               style={{
-                fontWeight: "bolder",
+                fontWeight: 900,
                 color: "black",
                 fontFamily: "monaco, Consolas, Lucida Console, monospace",
                 fontSize: "22px",
@@ -334,10 +334,10 @@ export class Invoice extends React.Component {
 
             <footer
               style={{
-                fontSize: "20px",
+                fontSize: "30px",
                 marginTop: "10px",
                 textAlign: "center",
-                fontWeight: "bolder",
+                fontWeight: 900,
                 color: "black",
                 fontFamily: "monaco, Consolas, Lucida Console, monospace",
               }}
@@ -346,7 +346,7 @@ export class Invoice extends React.Component {
               <div>{company?.invoice_footer_two}</div>
               <div
                 style={{
-                  fontWeight: "bolder",
+                  fontWeight: 900,
                   color: "black",
                   fontFamily: "monaco, Consolas, Lucida Console, monospace",
                   marginTop: "10px",
