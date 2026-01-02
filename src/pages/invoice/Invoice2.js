@@ -317,6 +317,9 @@ export class Invoice extends React.Component {
                 </>
               )}
               <br />
+              {/* VAT display */}
+              VAT ({invoice.vat_rate || 0}%): {invoice.currency}{this.formatCurrency2(invoice.vat_amount || 0)}
+              <br />
               {prev_balance > 0 && (
                 <>
                   Previous Balance: {invoice.currency}

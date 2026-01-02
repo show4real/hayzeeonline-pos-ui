@@ -129,9 +129,10 @@ export class AddInvoice extends Component {
       user: JSON.parse(localStorage.getItem("user")),
       english_ordinal_rules: new Intl.PluralRules("en", { type: "ordinal" }),
       suffixes: { one: "st", two: "nd", few: "rd", other: "th" },
-      total_balance: 0,
+  total_balance: 0,
       prev_balance: 0,
       pos_items: [],
+  vat_rate: 0,
     };
     this.baseState = this.state;
   }
@@ -353,7 +354,13 @@ export class AddInvoice extends Component {
     data.set("due_date", due_date);
     data.set("issue_date", issue_date);
     data.set("total_amount", this.totalCost());
-    data.set("balance", balance);
+  // include VAT
+  const vat_rate = this.state.vat_rate || 0;
+  const vat_amount = (this.totalCost() * parseFloat(vat_rate || 0)) / 100;
+  data.set("vat_rate", vat_rate);
+  data.set("vat_amount", vat_amount);
+  data.set("total_amount", this.totalCost() + vat_amount);
+  data.set("balance", this.totalCost() + vat_amount - amount_paid);
     data.set("amount_paid", amount_paid);
     for (var i in items) {
       // data.set(`name[${i}]`, items[i].name);
@@ -450,6 +457,17 @@ export class AddInvoice extends Component {
       total += items[v].rate * items[v].quantity;
     }
     return total;
+  };
+
+  vatAmount = () => {
+    const { vat_rate } = this.state;
+    const subtotal = this.totalCost();
+    const pct = parseFloat(vat_rate) || 0;
+    return (subtotal * pct) / 100;
+  };
+
+  totalWithVat = () => {
+    return this.totalCost() + this.vatAmount();
   };
 
   render() {
@@ -903,7 +921,24 @@ export class AddInvoice extends Component {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col md={4} style={{ marginBottom: 20 }}>
+                <Col md={3} style={{ marginBottom: 20 }}>
+                  <Form.Group className="mb-2">
+                    <Form.Label>VAT (%)</Form.Label>
+                    <InputGroup>
+                      <Input
+                        type="text"
+                        placeholder="Enter VAT %"
+                        value={this.state.vat_rate}
+                        onChange={async (e) => {
+                          // allow only numbers and dot
+                          const v = e.target.value.replace(/[^0-9.]/g, "");
+                          await this.onChange(v, "vat_rate");
+                        }}
+                      />
+                    </InputGroup>
+                  </Form.Group>
+                </Col>
+                <Col md={3} style={{ marginBottom: 20 }}>
                   <Form.Group className="mb-2">
                     <Form.Label>Amount Received</Form.Label>
                     <InputGroup>
@@ -927,12 +962,6 @@ export class AddInvoice extends Component {
                         }}
                         onChange={(e) => this.onChange(e, "amount_paid")}
                       />
-                      {/* {submitted &&
-                        this.state.amount_paid > this.totalCost() && (
-                          <div style={{ color: "red" }}>
-                            Amount received is more than total Cost
-                          </div>
-                        )} */}
                     </InputGroup>
                   </Form.Group>
                 </Col>
@@ -940,40 +969,34 @@ export class AddInvoice extends Component {
               <Row>
                 <Col md={8}></Col>
                 <Col md={4}>
-                  <Row style={{ fontSize: 20, fontWeight: "bold" }}>
+                  <Row style={{ fontSize: 18, fontWeight: "bold" }}>
                     <Col md={12}>
-                      Subtotal:{" "}
-                      <span style={{ fontSize: 15 }}>
-                        {currency !== "" ? currency : "#"}
-                      </span>
+                      Subtotal: <span style={{ fontSize: 15 }}>{currency !== "" ? currency : "#"}</span>
                       {this.formatCurrency(this.totalCost())}
+                    </Col>
+                  </Row>
+                  <Row style={{ fontSize: 18, fontWeight: "bold" }}>
+                    <Col md={12}>
+                      VAT ({this.state.vat_percent}%): <span style={{ fontSize: 15 }}>{currency !== "" ? currency : "#"}</span>
+                      {this.formatCurrency(this.vatAmount())}
                     </Col>
                   </Row>
                   <Row style={{ fontSize: 20, fontWeight: "bold" }}>
                     <Col md={12}>
-                      Total Cost:{" "}
-                      <span style={{ fontSize: 15 }}>
-                        {currency !== "" ? currency : "#"}
-                      </span>
-                      {this.formatCurrency(this.totalCost())}
+                      Total Cost: <span style={{ fontSize: 15 }}>{currency !== "" ? currency : "#"}</span>
+                      {this.formatCurrency(this.totalWithVat())}
                     </Col>
                   </Row>
-                  <Row style={{ fontSize: 20, fontWeight: "bold" }}>
+                  <Row style={{ fontSize: 18, fontWeight: "bold" }}>
                     <Col md={12}>
-                      Amount Received:{" "}
-                      <span style={{ fontSize: 15 }}>
-                        {currency !== "" ? currency : "#"}
-                      </span>
+                      Amount Received: <span style={{ fontSize: 15 }}>{currency !== "" ? currency : "#"}</span>
                       {this.formatCurrency(amount_paid)}
                     </Col>
                   </Row>
                   <Row style={{ fontSize: 20, fontWeight: "bold" }}>
                     <Col md={12}>
-                      Balance:{" "}
-                      <span style={{ fontSize: 15 }}>
-                        {currency !== "" ? currency : "#"}
-                      </span>
-                      {this.formatCurrency(this.totalCost() - amount_paid)}
+                      Balance: <span style={{ fontSize: 15 }}>{currency !== "" ? currency : "#"}</span>
+                      {this.formatCurrency(this.totalWithVat() - amount_paid)}
                     </Col>
                   </Row>
                 </Col>

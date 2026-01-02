@@ -359,6 +359,30 @@ export class Invoice extends React.Component {
                   </td>
                 </tr>
 
+                {/* VAT row */}
+                <tr style={{ paddingTop: 10 }}>
+                  <td
+                    colspan="3"
+                    style={{
+                      fontSize: 18,
+                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                    }}
+                    class="sum-up"
+                  >
+                    VAT ({invoice.vat_rate || 0}% )&nbsp;
+                  </td>
+
+                  <td
+                    class="price"
+                    style={{
+                      fontSize: 18,
+                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
+                    }}
+                  >
+                    {this.formatCurrency(invoice.currency, invoice.vat_amount || 0)}
+                  </td>
+                </tr>
+
                 <tr style={{ paddingTop: 10 }}>
                   <td
                     colspan="3"

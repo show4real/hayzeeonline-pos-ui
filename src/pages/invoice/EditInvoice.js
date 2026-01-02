@@ -75,7 +75,7 @@ export class EditInvoice extends Component {
       clients: [],
       currencies: [],
       hideNav: false,
-      prev_balance: 0,
+  prev_balance: 0,
     };
   }
 
@@ -224,8 +224,15 @@ export class EditInvoice extends Component {
     data.set("currency", currency);
     data.set("due_date", due_date);
     data.set("issued_date", issued_date);
-    data.set("total_amount", this.totalCost());
-    data.set("balance", balance);
+  // include VAT if provided on invoice
+  const vat_rate = invoice.vat_rate || invoice.vat_percent || 0;
+  const subtotal = this.totalCost();
+  const vat_amount = (parseFloat(subtotal) * parseFloat(vat_rate || 0)) / 100;
+  data.set("total_amount", subtotal + vat_amount);
+  // send vat_rate (backend canonical field)
+  data.set("vat_rate", vat_rate);
+  data.set("vat_amount", vat_amount);
+  data.set("balance", subtotal + vat_amount - amount_paid);
     data.set("amount_paid", amount_paid);
 
     for (var i in items) {
@@ -361,13 +368,12 @@ export class EditInvoice extends Component {
     return total;
   };
 
+  // Return a string formatted with thousands separators and up to 2 decimals
   formatCurrency(x) {
-    if (x !== null && x !== 0 && x !== undefined) {
-      const parts = x.toString().split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return `${parts.join(".")}`;
-    }
-    return "0";
+    const n = Number(x);
+    if (Number.isNaN(n)) return "0.00";
+    // Keep two decimal places, but trim trailing zeros when not needed visually
+    return n.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 
   getBalance() {
@@ -403,6 +409,18 @@ export class EditInvoice extends Component {
       total_balance,
       prev_balance,
     } = this.state;
+  // Compute subtotal from items when available; otherwise fall back to invoice.amount
+  const itemsSubtotal = items && items.length > 0 ? this.totalCost() : 0;
+  const subtotal = itemsSubtotal > 0 ? itemsSubtotal : (invoice && invoice.amount ? Number(invoice.amount) : 0);
+  // Use backend field vat_rate, fall back to vat_percent for older records
+  const vatRate = invoice && (invoice.vat_rate !== undefined && invoice.vat_rate !== null ? invoice.vat_rate : (invoice.vat_percent || 0));
+  const vatAmount = (parseFloat(subtotal || 0) * parseFloat(vatRate || 0)) / 100;
+  const totalWithVat = (parseFloat(subtotal || 0) + parseFloat(vatAmount || 0));
+  const amountReceived = invoice && (invoice.total_payment !== undefined && invoice.total_payment !== null) ? Number(invoice.total_payment) : 0;
+  const computedBalance = totalWithVat - amountReceived;
+  const prevBal = prev_balance || 0;
+  // Recompute total balance dynamically: prefer backend total_balance if present, else compute from prev balance + (totalWithVat - amountReceived)
+  const totalBal = (total_balance !== undefined && total_balance !== null) ? Number(total_balance) : (prevBal + computedBalance);
     return (
       <>
         {loading && <SpinDiv text={"Loading..."} />}
@@ -684,6 +702,23 @@ export class EditInvoice extends Component {
                             value={invoice.total_payment}
                             onChange={(e) => this.onChange(e, "amount_paid")}
                           />
+                        </InputGroup>
+                      </Form.Group>
+                    </Col>
+                    <Col md={2} style={{ marginBottom: 20 }}>
+                      <Form.Group className="mb-2">
+                        <Form.Label>VAT (%)</Form.Label>
+                        <InputGroup>
+                            <Input
+                              type="text"
+                              disabled={!edit}
+                              placeholder="VAT %"
+                              value={invoice.vat_rate !== undefined ? invoice.vat_rate : ''}
+                              onChange={async (e) => {
+                                const v = e.target.value.replace(/[^0-9.]/g, "");
+                                await this.onChange(v, "vat_rate");
+                              }}
+                            />
                         </InputGroup>
                       </Form.Group>
                     </Col>
@@ -983,46 +1018,46 @@ export class EditInvoice extends Component {
                 <Row>
                   <Col md={8}></Col>
                   <Col md={4}>
-                    <Row style={{ fontSize: 20, fontWeight: "bold" }}>
+                    <Row style={{ fontSize: 18, fontWeight: "bold" }}>
                       <Col md={12}>
-                        Subtotal:{" "}
-                        <span style={{ fontSize: 15 }}>{invoice.currency}</span>
-                        {this.formatCurrency(invoice.amount)}
+                        Subtotal: <span style={{ fontSize: 15 }}>{invoice.currency}</span>
+                        {this.formatCurrency(subtotal)}
+                      </Col>
+                    </Row>
+                    <Row style={{ fontSize: 18, fontWeight: "bold" }}>
+                      <Col md={12}>
+                        VAT ({vatRate || 0}%): <span style={{ fontSize: 15 }}>{invoice.currency}</span>
+                        {this.formatCurrency(vatAmount)}
                       </Col>
                     </Row>
                     <Row style={{ fontSize: 20, fontWeight: "bold" }}>
                       <Col md={12}>
-                        Total Cost:{" "}
-                        <span style={{ fontSize: 15 }}>{invoice.currency}</span>
-                        {this.formatCurrency(invoice.amount)}
+                        Total Cost: <span style={{ fontSize: 15 }}>{invoice.currency}</span>
+                        {this.formatCurrency(totalWithVat)}
                       </Col>
                     </Row>
                     <Row style={{ fontSize: 20, fontWeight: "bold" }}>
                       <Col md={12}>
-                        Amount Received:{" "}
-                        <span style={{ fontSize: 15 }}>{invoice.currency}</span>
-                        {this.formatCurrency(invoice.total_payment)}
+                        Amount Received: <span style={{ fontSize: 15 }}>{invoice.currency}</span>
+                        {this.formatCurrency(amountReceived)}
                       </Col>
                     </Row>
                     <Row style={{ fontSize: 20, fontWeight: "bold" }}>
                       <Col md={12}>
-                        Balance:{" "}
-                        <span style={{ fontSize: 15 }}>{invoice.currency}</span>
-                        {this.formatCurrency(invoice.total_balance)}
+                        Balance: <span style={{ fontSize: 15 }}>{invoice.currency}</span>
+                        {this.formatCurrency(balance)}
                       </Col>
                     </Row>
                     <Row style={{ fontSize: 20, fontWeight: "bold" }}>
                       <Col md={12}>
-                        Prev Balance:{" "}
-                        <span style={{ fontSize: 15 }}>{invoice.currency}</span>
-                        {this.formatCurrency(prev_balance)}
+                        Prev Balance: <span style={{ fontSize: 15 }}>{invoice.currency}</span>
+                        {this.formatCurrency(prevBal)}
                       </Col>
                     </Row>
                     <Row style={{ fontSize: 20, fontWeight: "bold" }}>
                       <Col md={12}>
-                        Total Balance:{" "}
-                        <span style={{ fontSize: 15 }}>{invoice.currency}</span>
-                        {this.formatCurrency(total_balance)}
+                        Total Balance: <span style={{ fontSize: 15 }}>{invoice.currency}</span>
+                        {this.formatCurrency(totalBal)}
                       </Col>
                     </Row>
                     {edit && (
