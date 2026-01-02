@@ -58,309 +58,109 @@ export class Invoice extends React.Component {
       this.props;
     const combinedItems = this.combineItems(pos_items);
 
+    // Calculate amounts (use invoice fields if provided else derive)
+    const itemsSubtotal = items && items.length > 0 ? this.totalCost() : 0;
+    const subtotal = itemsSubtotal > 0 ? itemsSubtotal : (invoice && invoice.amount ? Number(invoice.amount) : 0);
+    const vatRate = invoice && (invoice.vat_rate !== undefined && invoice.vat_rate !== null ? invoice.vat_rate : (invoice.vat_percent || 0));
+    const vatAmount = (parseFloat(subtotal || 0) * parseFloat(vatRate || 0)) / 100;
+    const totalWithVat = parseFloat(subtotal || 0) + parseFloat(vatAmount || 0);
+    const amountReceived = invoice && (invoice.total_payment !== undefined && invoice.total_payment !== null) ? Number(invoice.total_payment) : (invoice.amount_paid || 0);
+    const computedBalance = totalWithVat - amountReceived;
+    const prevBal = prev_balance || 0;
+    const totalBal = (total_balance !== undefined && total_balance !== null) ? Number(total_balance) : (prevBal + computedBalance);
+
+    // Thermal-friendly compact layout
     return (
-      <Card style={{ padding: "10px", width: "100%" }}>
-        {Object.keys(invoice).length !== 0 && (
-          <div>
-            <header
-              style={{
-                textAlign: "center",
-                marginBottom: "10px",
-                fontSize: "24px",
-              }}
-            >
-              <h1
-                style={{
-                  fontWeight: 900,
-                  color: "black",
-                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                }}
-              >
-                {company?.name || ""}
-              </h1>
-              <div
-                style={{
-                  fontWeight: 900,
-                  color: "black",
-                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                }}
-              >
-                <FontAwesomeIcon icon={faPhone} /> {company.phone_one},{" "}
-                {company.phone_two}
-              </div>
-              <div
-                style={{
-                  fontWeight: 900,
-                  color: "black",
-                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                }}
-              >
-                <FontAwesomeIcon icon={faGlobe} /> {company.website}
-              </div>
-            </header>
+      <div style={{ width: "100%", fontFamily: "monaco, Consolas, monospace", color: "black", padding: 8 }}>
+        <div style={{ textAlign: "center", marginBottom: 6, fontWeight: 700 }}>
+          <div style={{ fontSize: 16 }}>{company?.name || ""}</div>
+          <div style={{ fontSize: 10 }}>{company?.address}</div>
+          <div style={{ fontSize: 10 }}>{company?.phone_one} {company?.phone_two ? `| ${company.phone_two}` : ''}</div>
+        </div>
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: "30px",
-                marginBottom: "10px",
-              }}
-            >
-              <div
-                style={{
-                  textAlign: "left",
-                  fontWeight: 900,
-                  color: "black",
-                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                }}
-              >
-                Date: {moment(invoice.created_at).format("MMM DD YYYY, h:mm A")}
-                <br />
-                Invoice #: {invoice.invoice_no}
-                <br />
-                {company.address}
-              </div>
-              <div
-                style={{
-                  textAlign: "right",
-                  fontWeight: 900,
-                  color: "black",
-                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                }}
-              >
-                <strong>Customer</strong>
-                <br />
-                {invoice.client.name}
-                <br />
-                {invoice.client.phone}
-                <br />
-                {invoice.client.address}
-                <br />
-                {invoice.client.email || ""}
-              </div>
+        <div style={{ fontSize: 11, marginBottom: 6 }}>
+          Date: {invoice.created_at ? moment(invoice.created_at).format('YYYY-MM-DD HH:mm') : ''}
+          {'  '}
+          Invoice#: {invoice.invoice_no}
+        </div>
+
+        <div style={{ fontSize: 11, marginBottom: 6 }}>
+          Customer: {invoice.client?.name || 'Walk-in'}
+          {invoice.client?.phone ? ` | ${invoice.client.phone}` : ''}
+        </div>
+
+        <div style={{ borderTop: '1px dashed #000', marginTop: 6, marginBottom: 6 }} />
+
+        {/* Compact header for thermal print */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, fontWeight: 700, marginBottom: 4 }}>
+          <div style={{ width: '55%' }}>Product</div>
+          <div style={{ width: '15%', textAlign: 'right' }}>Qty</div>
+          <div style={{ width: '15%', textAlign: 'right' }}>Price</div>
+          <div style={{ width: '15%', textAlign: 'right' }}>Amount</div>
+        </div>
+
+        <div style={{ fontSize: 11 }}>
+          {items.map((item, i) => (
+            <div key={`it-${i}`} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+              <div style={{ width: '55%' }}>{item.description}</div>
+              <div style={{ width: '15%', textAlign: 'right' }}>{item.quantity}</div>
+              <div style={{ width: '15%', textAlign: 'right' }}>{this.formatCurrency(item.rate)}</div>
+              <div style={{ width: '15%', textAlign: 'right' }}>{this.formatCurrency(item.amount || item.rate * item.quantity)}</div>
             </div>
-
-            <Table
-              striped
-              bordered
-              hover
-              style={{ marginBottom: "10px", fontSize: "20px" }}
-            >
-              <thead>
-                <tr>
-                  <th
-                    style={{
-                      fontSize: "30px",
-                      fontWeight: 900,
-                      color: "black",
-                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                    }}
-                  >
-                    Product
-                  </th>
-                  <th
-                    style={{
-                      fontSize: "30px",
-                      fontWeight: 900,
-                      color: "black",
-                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                    }}
-                  >
-                    Qty
-                  </th>
-                  <th
-                    style={{
-                      fontSize: "30px",
-                      fontWeight: 900,
-                      color: "black",
-                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                    }}
-                  >
-                    Price
-                  </th>
-                  <th
-                    style={{
-                      fontSize: "30px",
-                      fontWeight: 900,
-                      color: "black",
-                      fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                    }}
-                  >
-                    Amount
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item, index) => (
-                  <tr key={index}>
-                    <td
-                      style={{
-                        fontSize: "30px",
-                        textTransform: "uppercase",
-                        fontWeight: 900,
-                        color: "black",
-                        fontFamily:
-                          "monaco, Consolas, Lucida Console, monospace",
-                        maxWidth: 300,
-                        textWrap: "wrap",
-                      }}
-                    >
-                      {item.description}
-                    </td>
-                    <td
-                      style={{
-                        fontSize: "30px",
-                        fontWeight: 900,
-                        color: "black",
-                        fontFamily:
-                          "monaco, Consolas, Lucida Console, monospace",
-                      }}
-                    >
-                      {item.quantity}
-                    </td>
-                    <td
-                      style={{
-                        fontSize: "30px",
-                        fontWeight: 900,
-                        color: "black",
-                        fontFamily:
-                          "monaco, Consolas, Lucida Console, monospace",
-                      }}
-                    >
-                      {this.formatCurrency(item.rate)}
-                    </td>
-                    <td
-                      style={{
-                        fontSize: "30px",
-                        fontWeight: 900,
-                        color: "black",
-                        fontFamily:
-                          "monaco, Consolas, Lucida Console, monospace",
-                      }}
-                    >
-                      {this.formatCurrency(item.amount)}
-                    </td>
-                  </tr>
-                ))}
-                {combinedItems.map((item, index) => (
-                  <tr key={index}>
-                    <td
-                      style={{
-                        fontSize: "30px",
-                        fontWeight: 900,
-                        color: "black",
-                        fontFamily:
-                          "monaco, Consolas, Lucida Console, monospace",
-                      }}
-                    >
-                      {item.order.product_name}
-                    </td>
-                    <td
-                      style={{
-                        fontSize: "30px",
-                        fontWeight: 900,
-                        color: "black",
-                        fontFamily:
-                          "monaco, Consolas, Lucida Console, monospace",
-                      }}
-                    >
-                      {item.qty_sold}
-                    </td>
-                    <td
-                      style={{
-                        fontSize: "30px",
-                        fontWeight: 900,
-                        color: "black",
-                        fontFamily:
-                          "monaco, Consolas, Lucida Console, monospace",
-                      }}
-                    >
-                      {this.formatCurrency(item.selling_price)}
-                    </td>
-                    <td
-                      style={{
-                        fontSize: "30px",
-                        fontWeight: 900,
-                        color: "black",
-                        fontFamily:
-                          "monaco, Consolas, Lucida Console, monospace",
-                      }}
-                    >
-                      {this.formatCurrency(item.selling_price * item.qty_sold)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-
-            <div
-              style={{
-                fontWeight: 900,
-                color: "black",
-                fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                fontSize: "30px",
-                textAlign: "right",
-                marginBottom: "10px",
-              }}
-            >
-              Total: {invoice.currency}
-              {this.formatCurrency2(invoice.amount)}
-              <br />
-              Paid: {invoice.currency}
-              {this.formatCurrency2(invoice.amount_paid)}
-              <br />
-              {invoice.amount - invoice.amount_paid > 0 && (
-                <>
-                  Balance: {invoice.currency}
-                  {invoice.amount - invoice.amount_paid}
-                </>
-              )}
-              <br />
-              {/* VAT display */}
-              VAT ({invoice.vat_rate || 0}%): {invoice.currency}{this.formatCurrency2(invoice.vat_amount || 0)}
-              <br />
-              {prev_balance > 0 && (
-                <>
-                  Previous Balance: {invoice.currency}
-                  {prev_balance}
-                </>
-              )}
-              <br />
-              {total_balance > 0 && (
-                <>
-                  Total Balance: {invoice.currency}
-                  {this.formatCurrency2(total_balance)}
-                </>
-              )}
+          ))}
+          {combinedItems.map((item, i) => (
+            <div key={`pos-${i}`} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+              <div style={{ width: '55%' }}>{item.order.product_name}</div>
+              <div style={{ width: '15%', textAlign: 'right' }}>{item.qty_sold}</div>
+              <div style={{ width: '15%', textAlign: 'right' }}>{this.formatCurrency(item.selling_price)}</div>
+              <div style={{ width: '15%', textAlign: 'right' }}>{this.formatCurrency(item.selling_price * item.qty_sold)}</div>
             </div>
+          ))}
+        </div>
 
-            <footer
-              style={{
-                fontSize: "30px",
-                marginTop: "10px",
-                textAlign: "center",
-                fontWeight: 900,
-                color: "black",
-                fontFamily: "monaco, Consolas, Lucida Console, monospace",
-              }}
-            >
-              <div>{company?.invoice_footer_one}</div>
-              <div>{company?.invoice_footer_two}</div>
-              <div
-                style={{
-                  fontWeight: 900,
-                  color: "black",
-                  fontFamily: "monaco, Consolas, Lucida Console, monospace",
-                  marginTop: "10px",
-                }}
-              >
-                Cashier: {invoice.cashier_name}
-              </div>
-            </footer>
+        <div style={{ borderTop: '1px dashed #000', marginTop: 6, marginBottom: 6 }} />
+
+        <div style={{ fontSize: 11 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>Subtotal</div>
+            <div>{invoice.currency}{this.formatCurrency(subtotal)}</div>
           </div>
-        )}
-      </Card>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>VAT ({vatRate}% )</div>
+            <div>{invoice.currency}{this.formatCurrency(vatAmount)}</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
+            <div>Total</div>
+            <div>{invoice.currency}{this.formatCurrency(totalWithVat)}</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>Amount Received</div>
+            <div>{invoice.currency}{this.formatCurrency(amountReceived)}</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>Balance</div>
+            <div>{invoice.currency}{this.formatCurrency(computedBalance)}</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>Prev Balance</div>
+            <div>{invoice.currency}{this.formatCurrency(prevBal)}</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
+            <div>Total Balance</div>
+            <div>{invoice.currency}{this.formatCurrency(totalBal)}</div>
+          </div>
+        </div>
+
+        <div style={{ borderTop: '1px dashed #000', marginTop: 6, marginBottom: 6 }} />
+
+        <div style={{ textAlign: 'center', fontSize: 10 }}>
+          {company?.invoice_footer_one}
+          <br />
+          {company?.invoice_footer_two}
+          <br />
+          Cashier: {invoice.cashier_name}
+        </div>
+      </div>
     );
   }
 }
