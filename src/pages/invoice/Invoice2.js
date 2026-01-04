@@ -69,22 +69,22 @@ export class Invoice extends React.Component {
     const prevBal = prev_balance || 0;
     const totalBal = (total_balance !== undefined && total_balance !== null) ? Number(total_balance) : (prevBal + computedBalance);
 
-    // Thermal-friendly compact layout
+    // Thermal-friendly compact layout (bold, larger, black text)
     return (
       <div style={{ width: "100%", fontFamily: "monaco, Consolas, monospace", color: "black", padding: 8 }}>
-        <div style={{ textAlign: "center", marginBottom: 6, fontWeight: 700 }}>
-          <div style={{ fontSize: 16 }}>{company?.name || ""}</div>
-          <div style={{ fontSize: 10 }}>{company?.address}</div>
-          <div style={{ fontSize: 10 }}>{company?.phone_one} {company?.phone_two ? `| ${company.phone_two}` : ''}</div>
+        <div style={{ textAlign: "center", marginBottom: 8, fontWeight: 900, color: 'black' }}>
+          <div style={{ fontSize: 20, fontWeight: 900 }}>{company?.name || ""}</div>
+          <div style={{ fontSize: 12, fontWeight: 800 }}>{company?.address}</div>
+          <div style={{ fontSize: 12, fontWeight: 800 }}>{company?.phone_one} {company?.phone_two ? `| ${company.phone_two}` : ''}</div>
         </div>
 
-        <div style={{ fontSize: 11, marginBottom: 6 }}>
+        <div style={{ fontSize: 12, marginBottom: 8, fontWeight: 800, color: 'black' }}>
           Date: {invoice.created_at ? moment(invoice.created_at).format('YYYY-MM-DD HH:mm') : ''}
           {'  '}
           Invoice#: {invoice.invoice_no}
         </div>
 
-        <div style={{ fontSize: 11, marginBottom: 6 }}>
+        <div style={{ fontSize: 12, marginBottom: 8, fontWeight: 800, color: 'black' }}>
           Customer: {invoice.client?.name || 'Walk-in'}
           {invoice.client?.phone ? ` | ${invoice.client.phone}` : ''}
         </div>
@@ -92,63 +92,69 @@ export class Invoice extends React.Component {
         <div style={{ borderTop: '1px dashed #000', marginTop: 6, marginBottom: 6 }} />
 
         {/* Compact header for thermal print */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, fontWeight: 700, marginBottom: 4 }}>
-          <div style={{ width: '55%' }}>Product</div>
-          <div style={{ width: '15%', textAlign: 'right' }}>Qty</div>
-          <div style={{ width: '15%', textAlign: 'right' }}>Price</div>
-          <div style={{ width: '15%', textAlign: 'right' }}>Amount</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 900, marginBottom: 6, color: 'black' }}>
+          <div style={{ width: '55%', fontWeight: 900 }}>Product</div>
+          <div style={{ width: '15%', textAlign: 'right', fontWeight: 900 }}>Qty</div>
+          <div style={{ width: '15%', textAlign: 'right', fontWeight: 900 }}>Price</div>
+          <div style={{ width: '15%', textAlign: 'right', fontWeight: 900 }}>Amount</div>
         </div>
 
-        <div style={{ fontSize: 11 }}>
+        <div style={{ fontSize: 12, color: 'black' }}>
           {items.map((item, i) => (
-            <div key={`it-${i}`} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-              <div style={{ width: '55%' }}>{item.description}</div>
-              <div style={{ width: '15%', textAlign: 'right' }}>{item.quantity}</div>
-              <div style={{ width: '15%', textAlign: 'right' }}>{this.formatCurrency(item.rate)}</div>
-              <div style={{ width: '15%', textAlign: 'right' }}>{this.formatCurrency(item.amount || item.rate * item.quantity)}</div>
+            <div key={`it-${i}`} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontWeight: 800, color: 'black' }}>
+              <div style={{ width: '55%', fontWeight: 800 }}>{item.description}</div>
+              <div style={{ width: '15%', textAlign: 'right', fontWeight: 800 }}>{item.quantity}</div>
+              <div style={{ width: '15%', textAlign: 'right', fontWeight: 800 }}>{this.formatCurrency(item.rate)}</div>
+              <div style={{ width: '15%', textAlign: 'right', fontWeight: 800 }}>{this.formatCurrency(item.amount || item.rate * item.quantity)}</div>
             </div>
           ))}
           {combinedItems.map((item, i) => (
-            <div key={`pos-${i}`} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-              <div style={{ width: '55%' }}>{item.order.product_name}</div>
-              <div style={{ width: '15%', textAlign: 'right' }}>{item.qty_sold}</div>
-              <div style={{ width: '15%', textAlign: 'right' }}>{this.formatCurrency(item.selling_price)}</div>
-              <div style={{ width: '15%', textAlign: 'right' }}>{this.formatCurrency(item.selling_price * item.qty_sold)}</div>
+            <div key={`pos-${i}`} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontWeight: 800, color: 'black' }}>
+              <div style={{ width: '55%', fontWeight: 800 }}>{item.order.product_name}</div>
+              <div style={{ width: '15%', textAlign: 'right', fontWeight: 800 }}>{item.qty_sold}</div>
+              <div style={{ width: '15%', textAlign: 'right', fontWeight: 800 }}>{this.formatCurrency(item.selling_price)}</div>
+              <div style={{ width: '15%', textAlign: 'right', fontWeight: 800 }}>{this.formatCurrency(item.selling_price * item.qty_sold)}</div>
             </div>
           ))}
         </div>
 
         <div style={{ borderTop: '1px dashed #000', marginTop: 6, marginBottom: 6 }} />
 
-        <div style={{ fontSize: 11 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ fontSize: 13, color: 'black' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 900, fontSize: 13 }}>
             <div>Subtotal</div>
             <div>{invoice.currency}{this.formatCurrency(subtotal)}</div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
             <div>VAT ({vatRate}% )</div>
             <div>{invoice.currency}{this.formatCurrency(vatAmount)}</div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 900, fontSize: 14, marginTop: 6 }}>
             <div>Total</div>
             <div>{invoice.currency}{this.formatCurrency(totalWithVat)}</div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
             <div>Amount Received</div>
             <div>{invoice.currency}{this.formatCurrency(amountReceived)}</div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>Balance</div>
-            <div>{invoice.currency}{this.formatCurrency(computedBalance)}</div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>Prev Balance</div>
-            <div>{invoice.currency}{this.formatCurrency(prevBal)}</div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-            <div>Total Balance</div>
-            <div>{invoice.currency}{this.formatCurrency(totalBal)}</div>
-          </div>
+          {computedBalance > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+              <div style={{ fontWeight: 900 }}>Balance</div>
+              <div style={{ fontWeight: 900 }}>{invoice.currency}{this.formatCurrency(computedBalance)}</div>
+            </div>
+          )}
+          {prevBal > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+              <div style={{ fontWeight: 900 }}>Prev Balance</div>
+              <div style={{ fontWeight: 900 }}>{invoice.currency}{this.formatCurrency(prevBal)}</div>
+            </div>
+          )}
+          {totalBal > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 900, fontSize: 14 }}>
+              <div>Total Balance</div>
+              <div>{invoice.currency}{this.formatCurrency(totalBal)}</div>
+            </div>
+          )}
         </div>
 
         <div style={{ borderTop: '1px dashed #000', marginTop: 6, marginBottom: 6 }} />
