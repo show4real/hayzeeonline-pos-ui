@@ -81,7 +81,7 @@ export class Invoice extends React.Component {
         <div style={{ fontSize: 12, marginBottom: 8, fontWeight: 800, color: 'black' }}>
           Date: {invoice.created_at ? moment(invoice.created_at).format('YYYY-MM-DD HH:mm') : ''}
           {'  '}
-          Invoice#: {invoice.invoice_no}
+          Receipt#: {invoice.invoice_no}
         </div>
 
         <div style={{ fontSize: 12, marginBottom: 8, fontWeight: 800, color: 'black' }}>

@@ -187,7 +187,7 @@ export class Invoice extends React.Component {
                           moment(invoice.due_date).format("MMM DD YYYY")} */}
                       <br />
                     </span>
-                    Invoice #:{invoice.invoice_no}
+                    Receipt #:{invoice.invoice_no}
                     <br />
                     <span style={{ whiteSpace: "pre-line" }}>
                       {company && company.address}
